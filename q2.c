@@ -9,13 +9,28 @@ int main(void)
 {
     int fd = open("test.txt", O_RDWR);
 
+    if (fd == -1)
+    {
+        perror("open");
+        return 1;
+    }
+
     struct stat file_info;
 
-    stat("test.txt", &file_info);
+    //Recupération des stat : retourne -1 en cas d'échec
+    int stat_result = stat("test.txt", &file_info);
+
+    if (stat_result == -1)
+    {
+        perror("stat");
+        close(fd);
+        return 1;
+    }
 
     int file_size = file_info.st_size;
 
-    char *file = mmap(
+    //Mappage du fichier : retourne MAP_FAILED en cas d'échec
+    char* file = mmap(
         NULL,
         file_size,
         PROT_READ | PROT_WRITE,
@@ -23,6 +38,13 @@ int main(void)
         fd,
         0
     );
+
+    if (file == MAP_FAILED)
+    {
+        perror("mmap");
+        close(fd);
+        return 1;
+    }
 
     //Inversement
     for (size_t i = 0; i < file_size / 2; i++)
@@ -32,8 +54,23 @@ int main(void)
         file[file_size - 1 - i] = temp;
     }
 
-    munmap(file, file_size);
-    close(fd);
+    //Liberation de memoire : retourne -1 en cas d'échec
+    int munmap_result = munmap(file, file_size);
+
+    if (munmap_result == -1)
+    {
+        perror("munmap");
+        close(fd);
+        return 1;
+    }
+
+    int close_result = close(fd);
+
+    if (close_result == -1)
+    {
+        perror("close");
+        return 1;
+    }
 
     return 0;
 }

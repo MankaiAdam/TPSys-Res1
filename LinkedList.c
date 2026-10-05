@@ -8,138 +8,152 @@
 
 typedef struct cell
 {
-	int val;
-	struct cell *next;
-}Cell;
+    int val;
+    struct cell* next;
+} Cell;
 
-typedef struct {
-	Cell *first;
-}List;
+typedef struct
+{
+    Cell* first;
+} List;
 
-void fill(List *list , int n) {
-	Cell *new_cell, *last;
-	for (int i = 0; i < n; i++)
-	{
-		new_cell = malloc(sizeof(Cell));
+void fill(List* list, int n)
+{
+    Cell *new_cell, *last;
+    for (int i = 0; i < n; i++)
+    {
+        new_cell = malloc(sizeof(Cell));
 
-		if(new_cell != NULL){
-			new_cell->val = i;
-			new_cell->next = NULL;
-			if(list->first == NULL)
-				list->first = new_cell;
-			else
-				last->next = new_cell;
+        if (new_cell != NULL)
+        {
+            new_cell->val = i;
+            new_cell->next = NULL;
+            if (list->first == NULL)
+                list->first = new_cell;
+            else
+                last->next = new_cell;
 
-			last = new_cell;
-		}
-	}
+            last = new_cell;
+        }
+    }
 }
 
 
 int size(List list)
 {
-	int size = 0;
-	Cell *it = list.first;
-	while(it != NULL)
-	{
-		it = it->next;
-		size++;
-	}
-	return size;
+    int size = 0;
+    Cell* it = list.first;
+    while (it != NULL)
+    {
+        it = it->next;
+        size++;
+    }
+    return size;
 }
 
 void print(List list)
 {
-	Cell *it = list.first;
-	while(it != NULL)
-	{
-		printf("<%p> : %d ",it,it->val);
-		it = it->next;
-	}
+    Cell* it = list.first;
+    while (it != NULL)
+    {
+        printf("<%p> : %d ", it, it->val);
+        it = it->next;
+    }
 }
 
-void deleteFirst (List* list) {
-	Cell* first = list->first;
-	if (first != NULL) {
-		list -> first = first -> next;
-		free(first) ;
-	}
+void deleteFirst(List* list)
+{
+    Cell* first = list->first;
+    if (first != NULL)
+    {
+        list->first = first->next;
+        free(first);
+    }
 }
+
 void deleteLast(List* list)
 {
-	Cell* it = list->first;
-	if (it != NULL){
-		Cell * prev;
-		while ( it -> next !=NULL)
-		{
-			prev = it;
-			it = it-> next ;
-		}
-		if (it == list-> first)
-			list->first = NULL ;
-		else
-			prev -> next = NULL;
-		free(it);
-	}
+    Cell* it = list->first;
+    if (it != NULL)
+    {
+        Cell* prev;
+        while (it->next != NULL)
+        {
+            prev = it;
+            it = it->next;
+        }
+        if (it == list->first)
+            list->first = NULL;
+        else
+            prev->next = NULL;
+        free(it);
+    }
 }
 
-void addToStart (List* list, int value){
-	Cell * new_cell  = malloc (sizeof(Cell)) ;
-	if (new_cell!=NULL){
-		new_cell -> val = value;
-		new_cell -> next = list-> first ;
-		list-> first = new_cell ;
-	}
+void addToStart(List* list, int value)
+{
+    Cell* new_cell = malloc(sizeof(Cell));
+    if (new_cell != NULL)
+    {
+        new_cell->val = value;
+        new_cell->next = list->first;
+        list->first = new_cell;
+    }
 }
-void addToEnd(List *list,int value){
-    Cell *new_cell = malloc(sizeof(Cell));
-    if(new_cell!= NULL){
-        new_cell->val=value;
-        new_cell->next=NULL;
-        if(list->first ==NULL)
-            list->first=new_cell;
-        else{
+
+void addToEnd(List* list, int value)
+{
+    Cell* new_cell = malloc(sizeof(Cell));
+    if (new_cell != NULL)
+    {
+        new_cell->val = value;
+        new_cell->next = NULL;
+        if (list->first == NULL)
+            list->first = new_cell;
+        else
+        {
             Cell* it = list->first;
-            while(it->next !=NULL)
-                it=it->next;
+            while (it->next != NULL)
+                it = it->next;
             it->next = new_cell;
         }
     }
 }
 
-void copyToEnd(List *dest, List src)
+void copyToEnd(List* dest, List src)
 {
-	Cell* it = src.first;
+    Cell* it = src.first;
 
-	while (it != NULL) {
-		addToEnd(dest, it->val);
-		it = it->next;
-	}
+    while (it != NULL)
+    {
+        addToEnd(dest, it->val);
+        it = it->next;
+    }
 }
 
 List concat(List list1, List list2)
 {
-	List new_list = {NULL};
+    List new_list = {NULL};
 
-	copyToEnd(&new_list, list1);
-	copyToEnd(&new_list, list2);
+    copyToEnd(&new_list, list1);
+    copyToEnd(&new_list, list2);
 
-	return new_list;
+    return new_list;
 }
 
 void applyFunction(List* list, int (*f)(int))
 {
-	Cell *it = list->first;
-	while(it != NULL)
-	{
-		it->val = f(it->val);
-		it = it->next;
-	}
+    Cell* it = list->first;
+    while (it != NULL)
+    {
+        it->val = f(it->val);
+        it = it->next;
+    }
 }
 
 int square(int x)
 {
-	return x * x;
+    return x * x;
 }
 
 
@@ -153,7 +167,6 @@ int main()
     print(l1);
 
     printf("\nLongueur : %d\n\n", size(l1));
-
 
 
     //ajouter_premier
@@ -235,7 +248,7 @@ int main()
 
     printf("\nAprès :\n");
     print(l3);
-	printf("\n");
+    printf("\n");
 
     //Libération de la mémoire
 
