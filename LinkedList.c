@@ -159,7 +159,6 @@ int square(int x)
 
 int main()
 {
-    //Création d'une list
     List l1 = {NULL};
     printf("===== remplir =====\n");
 
@@ -169,7 +168,6 @@ int main()
     printf("\nLongueur : %d\n\n", size(l1));
 
 
-    //ajouter_premier
     printf("===== ajouter_premier =====\n");
     addToStart(&l1, START_VALUE);
     print(l1);
@@ -177,7 +175,6 @@ int main()
     printf("\nLongueur : %d\n\n", size(l1));
 
 
-    //ajouter_fin
     printf("===== ajouter_fin =====\n");
 
     addToEnd(&l1, END_VALUE);
@@ -187,7 +184,6 @@ int main()
     printf("\nLongueur : %d\n\n", size(l1));
 
 
-    //retirer_premier
     printf("===== retirer_premier =====\n");
 
     deleteFirst(&l1);
@@ -197,7 +193,6 @@ int main()
     printf("\nLongueur : %d\n\n", size(l1));
 
 
-    //retirer_fin
     printf("===== retirer_fin =====\n");
 
     deleteLast(&l1);
@@ -207,7 +202,6 @@ int main()
     printf("\nLongueur : %d\n\n", size(l1));
 
 
-    //Deuxième liste
     printf("===== Deuxième liste =====\n");
 
     List l2 = {NULL};
@@ -218,8 +212,6 @@ int main()
 
     printf("\nLongueur : %d\n\n", size(l2));
 
-
-    //concatener
 
     printf("===== concatener =====\n");
 
@@ -237,8 +229,6 @@ int main()
     printf("\nLongueur : %d\n\n", size(l3));
 
 
-    //apply_fct
-
     printf("===== apply_fct(square) =====\n");
 
     printf("Avant :\n");
@@ -249,8 +239,7 @@ int main()
     printf("\nAprès :\n");
     print(l3);
     printf("\n");
-
-    //Libération de la mémoire
+    
 
     while (l1.first != NULL)
         deleteFirst(&l1);

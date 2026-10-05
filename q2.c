@@ -17,7 +17,7 @@ int main(void)
 
     struct stat file_info;
 
-    //Recupération des stat : retourne -1 en cas d'échec
+    // Récupération de la taille du fichier.
     int stat_result = stat("test.txt", &file_info);
 
     if (stat_result == -1)
@@ -29,7 +29,8 @@ int main(void)
 
     int file_size = file_info.st_size;
 
-    //Mappage du fichier : retourne MAP_FAILED en cas d'échec
+    // Projection du fichier en mémoire pour pouvoir modifier directement son contenu
+    // retourne MAP_FAILED en cas d'échec
     char* file = mmap(
         NULL,
         file_size,
@@ -46,7 +47,7 @@ int main(void)
         return 1;
     }
 
-    //Inversement
+    // Inversion des octets du fichier
     for (size_t i = 0; i < file_size / 2; i++)
     {
         char temp = file[i];

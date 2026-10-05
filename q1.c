@@ -14,7 +14,7 @@ char* Str = "Hello World";
 
 int main(void)
 {
-    //Données allouées dynamiquement
+    // Allocation dynamique sur le tas
     int* var_heap = malloc(sizeof(int));
 
     if (var_heap == NULL)
@@ -23,7 +23,7 @@ int main(void)
         return 1;
     }
 
-    //Données à portées limitées stockées dans la pile d’exécution
+    // Variable locale stockée sur la pile
     int var_stack = 30;
 
     //allocation mémoire : retourne MAP_FAILED en cas d'échec
