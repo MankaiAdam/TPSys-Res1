@@ -1,19 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define LIST1_SIZE 5
+#define LIST2_SIZE 3
+#define START_VALUE 100
+#define END_VALUE 200
+
 typedef struct cell
 {
 	int val;
 	struct cell *next;
 	struct cell *prev;
 }Cell;
+
 typedef struct {
 	Cell *first;
 }List;
 
 void fill(List *list , int n){
+	Cell *new_cell, *last;
 	for(int i = 0; i < n ; i++){
-		Cell* new_cell = malloc(sizeof(Cell));
+		new_cell = malloc(sizeof(Cell));
 		if(new_cell != NULL){
 			new_cell->val = i;
 			new_cell->next = NULL;
@@ -21,14 +28,10 @@ void fill(List *list , int n){
 			if(list->first == NULL)
 				list->first = new_cell;
 			else{
-				Cell* it = list->first;
-
-				//Itérer jusqu'au dernier élément
-				while(it->next != NULL)
-					it = it->next;
-				new_cell->prev = it;
-				it->next=new_cell;
+				new_cell->prev = last;
+				last->next=new_cell;
 			}
+			last = new_cell;
 		}
 	}
 }
@@ -55,7 +58,7 @@ void print(List list)
 	}
 }
 
-int deleteFirst (List* list) {
+void deleteFirst (List* list) {
 	Cell* first = list->first;
 	if (first != NULL){
 		Cell* next = first->next;
@@ -111,29 +114,27 @@ void addToEnd(List *list,int value){
     }
 }
 
+void copyToEnd(List *dest, List src)
+{
+	Cell* it = src.first;
+
+	while (it != NULL) {
+		addToEnd(dest, it->val);
+		it = it->next;
+	}
+}
+
 List concat(List list1, List list2)
 {
-	List new_list;
-	Cell* it = list1.first;
-	Cell* new_cell = malloc(sizeof(Cell));;
+	List new_list = {NULL};
 
-	while(it != NULL){
-
-		addToEnd(&new_list,it->val);
-		it = it->next;
-	}
-
-	it = list2.first;
-
-	while(it != NULL){
-		addToEnd(&new_list,it->val);
-		it = it->next;
-	}
+	copyToEnd(&new_list, list1);
+	copyToEnd(&new_list, list2);
 
 	return new_list;
 }
 
-void apply_fct(List* list, int (*f)(int))
+void applyFunction(List* list, int (*f)(int))
 {
 	Cell *it = list->first;
 	while(it != NULL)
@@ -155,7 +156,7 @@ int main()
     List l1 = {NULL};
     printf("===== remplir =====\n");
 
-    fill(&l1, 5);
+    fill(&l1, LIST1_SIZE);
     print(l1);
 
     printf("\nLongueur : %d\n\n", size(l1));
@@ -164,7 +165,7 @@ int main()
 
     //ajouter_premier
     printf("===== ajouter_premier =====\n");
-    addToStart(&l1, 100);
+    addToStart(&l1, START_VALUE);
     print(l1);
 
     printf("\nLongueur : %d\n\n", size(l1));
@@ -173,7 +174,7 @@ int main()
     //ajouter_fin
     printf("===== ajouter_fin =====\n");
 
-    addToEnd(&l1, 200);
+    addToEnd(&l1, END_VALUE);
 
     print(l1);
 
@@ -205,7 +206,7 @@ int main()
 
     List l2 = {NULL};
 
-    fill(&l2, 3);
+    fill(&l2, LIST2_SIZE);
 
     print(l2);
 
@@ -237,11 +238,11 @@ int main()
     printf("Avant :\n");
     print(l3);
 
-    apply_fct(&l3, square);
+    applyFunction(&l3, square);
 
     printf("\nAprès :\n");
     print(l3);
-
+	printf("\n");
 
     //Libération de la mémoire
 

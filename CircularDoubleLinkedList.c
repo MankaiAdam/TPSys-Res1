@@ -1,12 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define LIST1_SIZE 5
+#define LIST2_SIZE 3
+#define START_VALUE 100
+#define END_VALUE 200
+
 typedef struct cell
 {
 	int val;
 	struct cell *next;
 	struct cell *prev;
 }Cell;
+
 typedef struct {
 	Cell *first;
 }List;
@@ -35,6 +41,9 @@ void fill(List *list , int n){
 
 int size(List list)
 {
+	if (list.first == NULL)
+		return 0;
+
 	int size = 0;
 	Cell* it = list.first;
 	Cell* first = it;
@@ -47,6 +56,9 @@ int size(List list)
 
 void print(List list)
 {
+	if (list.first == NULL)
+		return;
+
 	Cell* it = list.first;
 	Cell* first = it;
 	do{
@@ -55,7 +67,7 @@ void print(List list)
 	}while (it != first);
 }
 
-int deleteFirst (List* list) {
+void deleteFirst (List* list) {
 	Cell* first = list->first;
 	if (first != NULL){
 		if (first->next == first)
@@ -105,6 +117,9 @@ void addToStart (List* list, int value){
 			new_cell -> next = first;
 			first->prev = new_cell;
 			last->next = new_cell;
+		}else {
+			new_cell->next = new_cell;
+			new_cell->prev = new_cell;
 		}
 		list-> first = new_cell ;
 	}
@@ -112,11 +127,15 @@ void addToStart (List* list, int value){
 
 void addToEnd(List *list,int value){
 	Cell* new_cell = malloc(sizeof(Cell));
-	if(new_cell != NULL){
+	if (new_cell != NULL)
+	{
 		new_cell->val = value;
 		new_cell->next = NULL;
-		if(list->first == NULL) {
+		if (list->first == NULL)
+		{
 			list->first = new_cell;
+
+			// La seule cellule pointe vers elle-même dans les deux directions.
 			new_cell->next = new_cell;
 			new_cell->prev = new_cell;
 		}
@@ -130,35 +149,31 @@ void addToEnd(List *list,int value){
 	}
 }
 
+void copyToEnd(List *dest, List src)
+{
+	if (src.first == NULL)
+		return;
+
+	Cell *it = src.first;
+
+	do
+	{
+		addToEnd(dest, it->val);
+		it = it->next;
+	} while (it != src.first);
+}
+
 List concat(List list1, List list2)
 {
 	List new_list = {NULL};
-	Cell* it = list1.first;
-	Cell* first = it;
 
-	if (it != NULL)
-	{
-		do{
-			addToEnd(&new_list, it->val);
-			it = it->next;
-		}while(it != first);
-	}
-
-	it = list2.first;
-	first = it;
-
-	if (it != NULL)
-	{
-		do{
-			addToEnd(&new_list, it->val);
-			it = it->next;
-		}while(it != first);
-	}
+	copyToEnd(&new_list, list1);
+	copyToEnd(&new_list, list2);
 
 	return new_list;
 }
 
-void apply_fct(List* list, int (*f)(int))
+void applyFunction(List* list, int (*f)(int))
 {
 	Cell* it = list->first;
 	Cell* first = it;
@@ -184,7 +199,7 @@ int main()
     List l1 = {NULL};
     printf("===== remplir =====\n");
 
-    fill(&l1, 5);
+    fill(&l1, LIST1_SIZE);
     print(l1);
 
     printf("\nLongueur : %d\n\n", size(l1));
@@ -192,7 +207,7 @@ int main()
 
     //ajouter_premier
     printf("===== ajouter_premier =====\n");
-    addToStart(&l1, 100);
+    addToStart(&l1, START_VALUE);
     print(l1);
 
     printf("\nLongueur : %d\n\n", size(l1));
@@ -201,7 +216,7 @@ int main()
     //ajouter_fin
     printf("===== ajouter_fin =====\n");
 
-    addToEnd(&l1, 200);
+    addToEnd(&l1, END_VALUE);
 
     print(l1);
 
@@ -233,7 +248,7 @@ int main()
 
     List l2 = {NULL};
 
-    fill(&l2, 3);
+    fill(&l2, LIST2_SIZE);
 
     print(l2);
 
@@ -264,11 +279,11 @@ int main()
     printf("Avant :\n");
     print(l3);
 
-    apply_fct(&l3, square);
+    applyFunction(&l3, square);
 
     printf("\nAprès :\n");
     print(l3);
-
+	printf("\n");
 
     //Libération de la mémoire
 
